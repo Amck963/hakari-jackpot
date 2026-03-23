@@ -83,4 +83,88 @@ video {
 
 canvas {
   pointer-events: none;
+  z-index: 3;
+}
+
+.slotGif {
+  position: absolute;
+  left: -40%;
+  width: 240px;
+  opacity: 0;
+  pointer-events: none;
+  z-index: 2;
+  transform: scaleX(-1);
+  filter: blur(0.5px);
+}
+
+.slotGif.show {
+  opacity: 0.55;
+}
+
+.slotGif.jackpot {
+  opacity: 0.82;
+  filter: blur(0px) drop-shadow(0 0 18px rgba(100, 170, 255, 0.75));
+}
+
+#slotGif1.show {
+  animation: slotFly1 0.72s linear infinite;
+}
+
+#slotGif2.show {
+  animation: slotFly2 0.88s linear infinite;
+}
+
+#slotGif3.show {
+  animation: slotFly3 0.66s linear infinite;
+}
+
+#slotGif1.jackpot {
+  animation: slotFly1 0.45s linear infinite;
+}
+
+#slotGif2.jackpot {
+  animation: slotFly2 0.58s linear infinite;
+}
+
+#slotGif3.jackpot {
+  animation: slotFly3 0.42s linear infinite;
+}
+
+@keyframes slotFly1 {
+  0% {
+    left: -30%;
+    top: 8%;
+    transform: scaleX(-1) scale(0.8) rotate(-8deg);
+  }
+  100% {
+    left: 120%;
+    top: 22%;
+    transform: scaleX(-1) scale(1.05) rotate(7deg);
+  }
+}
+
+@keyframes slotFly2 {
+  0% {
+    left: -35%;
+    top: 38%;
+    transform: scaleX(-1) scale(0.95) rotate(5deg);
+  }
+  100% {
+    left: 120%;
+    top: 26%;
+    transform: scaleX(-1) scale(0.85) rotate(-5deg);
+  }
+}
+
+@keyframes slotFly3 {
+  0% {
+    left: -25%;
+    top: 68%;
+    transform: scaleX(-1) scale(0.88) rotate(-4deg);
+  }
+  100% {
+    left: 120%;
+    top: 48%;
+    transform: scaleX(-1) scale(1.1) rotate(8deg);
+  }
 }

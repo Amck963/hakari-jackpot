@@ -5,7 +5,7 @@ export class AudioManager {
 
     this.domainAudio.preload = "auto";
     this.jackpotAudio.preload = "auto";
-    this.jackpotAudio.loop = true;
+    this.jackpotAudio.loop = false;
   }
 
   unlock() {
@@ -26,5 +26,9 @@ export class AudioManager {
   stopJackpot() {
     this.jackpotAudio.pause();
     this.jackpotAudio.currentTime = 0;
+  }
+
+  isJackpotPlaying() {
+    return !this.jackpotAudio.paused && !this.jackpotAudio.ended;
   }
 }

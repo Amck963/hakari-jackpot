@@ -19,6 +19,11 @@ const ctx = canvas.getContext("2d");
 const startBtn = document.getElementById("startBtn");
 const statusText = document.getElementById("statusText");
 
+const slotGif1 = document.getElementById("slotGif1");
+const slotGif2 = document.getElementById("slotGif2");
+const slotGif3 = document.getElementById("slotGif3");
+const slotGifs = [slotGif1, slotGif2, slotGif3];
+
 let handLandmarker = null;
 let running = false;
 let lastVideoTime = -1;
@@ -38,13 +43,11 @@ const STATE = {
 let state = STATE.IDLE;
 let domainStart = 0;
 let resultStart = 0;
-let jackpotStart = 0;
 let lastTrigger = 0;
 
 const DETECTION_COOLDOWN = 5000;
 const DOMAIN_DURATION = 1800;
 const RESULT_DURATION = 2000;
-const JACKPOT_DURATION = 9000;
 
 async function setupCamera() {
   const stream = await navigator.mediaDevices.getUserMedia({
@@ -109,7 +112,6 @@ function updateState(now) {
     if (slotMachine.finished) {
       if (slotMachine.jackpot) {
         state = STATE.JACKPOT;
-        jackpotStart = now;
         audio.playJackpot();
       } else {
         state = STATE.RESULT;
@@ -122,16 +124,33 @@ function updateState(now) {
       state = STATE.IDLE;
     }
   } else if (state === STATE.JACKPOT) {
-    if (now - jackpotStart >= JACKPOT_DURATION) {
-      audio.stopJackpot();
+    if (!audio.isJackpotPlaying()) {
       slotMachine.reset();
       state = STATE.IDLE;
     }
   }
 }
 
+function updateGifState() {
+  slotGifs.forEach((gif) => {
+    gif.classList.remove("show", "jackpot");
+  });
+
+  if (state === STATE.DOMAIN || state === STATE.ROLLING) {
+    slotGifs.forEach((gif) => gif.classList.add("show"));
+  }
+
+  if (state === STATE.JACKPOT) {
+    slotGifs.forEach((gif) => {
+      gif.classList.add("show");
+      gif.classList.add("jackpot");
+    });
+  }
+}
+
 function render(now) {
   clearCanvas(ctx, canvas);
+  updateGifState();
 
   if (result) {
     drawLandmarks(ctx, result, canvas);
@@ -160,11 +179,11 @@ function render(now) {
 
   if (state === STATE.JACKPOT) {
     const centers = getHandCenters(result, canvas.width, canvas.height);
-    drawBlueAura(ctx, canvas, now - jackpotStart);
+    drawBlueAura(ctx, canvas, now);
     drawSlotMachine(ctx, canvas, slotMachine.values);
     drawText(ctx, "JACKPOT", canvas.width / 2, 110, 58, "#8bc2ff");
     drawText(ctx, "FEVER MODE", canvas.width / 2, canvas.height - 40, 26, "#d8ebff");
-    drawHandGlow(ctx, centers, canvas, now - jackpotStart);
+    drawHandGlow(ctx, centers, canvas, now);
   }
 }
 
@@ -180,11 +199,12 @@ function loop(now) {
 
 startBtn.addEventListener("click", async () => {
   startBtn.disabled = true;
+
   try {
     await init();
   } catch (err) {
-    console.error(err);
-    statusText.textContent = "Failed to start webcam or hand tracker";
+    console.error("FULL ERROR:", err);
+    statusText.textContent = err.message || "Error starting app";
     startBtn.disabled = false;
   }
 });
