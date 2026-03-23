@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hakari Domain Expansion</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="app">
+    <div class="topbar">
+      <h1>Hakari Domain Expansion</h1>
+      <p>Make a circle with thumb + index on both hands</p>
+    </div>
+
+    <div class="controls">
+      <button id="startBtn">Start</button>
+      <span id="statusText">Waiting to start...</span>
+    </div>
+
+    <div class="video-wrap">
+      <video id="webcam" autoplay playsinline muted></video>
+      <canvas id="overlay"></canvas>
+    </div>
+  </div>
+
+  <script type="module" src="app.js"></script>
+</body>
+</html>
