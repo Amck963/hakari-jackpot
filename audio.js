@@ -6,6 +6,9 @@ export class AudioManager {
     this.domainAudio.preload = "auto";
     this.jackpotAudio.preload = "auto";
     this.jackpotAudio.loop = false;
+
+    this.domainAudio.volume = 1;
+    this.jackpotAudio.volume = 1;
   }
 
   unlock() {
@@ -14,11 +17,13 @@ export class AudioManager {
   }
 
   playDomain() {
+    this.domainAudio.pause();
     this.domainAudio.currentTime = 0;
     this.domainAudio.play().catch(() => {});
   }
 
   playJackpot() {
+    this.jackpotAudio.pause();
     this.jackpotAudio.currentTime = 0;
     this.jackpotAudio.play().catch(() => {});
   }

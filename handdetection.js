@@ -14,9 +14,9 @@ export async function createHandLandmarker() {
     },
     runningMode: "VIDEO",
     numHands: 2,
-    minHandDetectionConfidence: 0.6,
-    minHandPresenceConfidence: 0.6,
-    minTrackingConfidence: 0.6
+    minHandDetectionConfidence: 0.65,
+    minHandPresenceConfidence: 0.65,
+    minTrackingConfidence: 0.65
   });
 
   return handLandmarker;
@@ -34,14 +34,22 @@ export function isCircleSign(handLandmarks) {
   const middleTip = handLandmarks[12];
   const ringTip = handLandmarks[16];
   const pinkyTip = handLandmarks[20];
+  const wrist = handLandmarks[0];
 
   const thumbIndexClose = distance(thumbTip, indexTip) < 0.08;
-  const otherFingersVisible =
-    middleTip.y < 0.9 &&
-    ringTip.y < 0.95 &&
-    pinkyTip.y < 1.0;
 
-  return thumbIndexClose && otherFingersVisible;
+  const handIsVisible =
+    wrist.x > 0.02 &&
+    wrist.x < 0.98 &&
+    wrist.y > 0.02 &&
+    wrist.y < 0.98;
+
+  const fingersOutEnough =
+    middleTip.y < wrist.y + 0.08 &&
+    ringTip.y < wrist.y + 0.12 &&
+    pinkyTip.y < wrist.y + 0.16;
+
+  return thumbIndexClose && handIsVisible && fingersOutEnough;
 }
 
 export function detectHakariSign(result) {

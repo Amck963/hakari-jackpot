@@ -4,18 +4,18 @@ export class SlotMachine {
     this.rolling = false;
     this.finished = false;
     this.jackpot = false;
-    this.rollDuration = 2500;
-    this.updateInterval = 70;
+    this.rollDuration = 3000;
+    this.updateInterval = 65;
     this.startTime = 0;
     this.lastUpdate = 0;
   }
 
-  start() {
+  start(now) {
     this.values = [0, 0, 0];
     this.rolling = true;
     this.finished = false;
     this.jackpot = false;
-    this.startTime = performance.now();
+    this.startTime = now;
     this.lastUpdate = 0;
   }
 
@@ -35,10 +35,10 @@ export class SlotMachine {
       this.rolling = false;
       this.finished = true;
 
-      const shouldJackpot = Math.random() < 0.4;
+      const shouldJackpot = Math.random() < 0.45;
 
       if (shouldJackpot) {
-        const n = Math.floor(Math.random() * 10);
+        const n = [4, 7, 8][Math.floor(Math.random() * 3)];
         this.values = [n, n, n];
         this.jackpot = true;
       } else {
